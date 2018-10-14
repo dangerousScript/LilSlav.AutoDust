@@ -15,7 +15,7 @@ namespace LilSlav.AutoDust
 		private static Hero _myHero;
 		private static Player _player;
 		private const int DustRange = 1000;					/* maksimalna udaljenost za dust */
-		private const string ScriptVersion = "1.0.2.3";		// za ispis
+		private const string ScriptVersion = "1.2.2.3";		// za ispis
 
 		#endregion
 
@@ -57,7 +57,7 @@ namespace LilSlav.AutoDust
 
 			// provera da li imamo dust i torbici
 			var itemDust = _myHero.FindItem("item_dust");
-			if (itemDust == null || itemDust.CanBeCasted() || _myHero.IsInvisible()) return;
+			if (itemDust == null || !itemDust.CanBeCasted() || _myHero.IsInvisible()) return;
 
 			// pravimo listu enemy-ja
 			// da nije iluzija
