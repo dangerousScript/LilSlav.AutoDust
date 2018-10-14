@@ -76,6 +76,12 @@ namespace LilSlav.AutoDust
 			foreach (var enemy in listEnemy)
 			{
 				// dodati logiku
+				if (enemy.Modifiers.Any(
+					x => (x.Name == "modifier_clinkz_wind_walk")))
+				{
+					itemDust.UseAbility();
+					Utils.Sleep(250, "delay");
+				}
 			}
 
 		}
