@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using Ensage;
 using Ensage.Common;
@@ -33,26 +34,62 @@ namespace LilSlav.AutoDust
 				_player = ObjectManager.LocalPlayer;
 				
 				// proveravamo da li se game ucitao
-				if (!Game.IsInGame || _myHero == null)
-				{
-					return;		// izlaz ako nismo jos usli u game
-				}
-
+				if (!Game.IsInGame || _myHero == null) return;		// izlaz ako nismo jos usli u game
+				
 				_loaded = true;
-				PrintSuccess($"> LilSlav.AutoDust Loaded v{ScriptVersion}");	// ispis u consolu ako je uspesno pokrenuta
+				PrintSuccess($">>> LilSlav.AutoDust Loaded v{ScriptVersion} <<<");	// ispis u consolu ako je uspesno pokrenuta
 			}
+
+			// ako nije u game-u onda unload
+			if (!Game.IsInGame || _myHero == null)
+			{
+				_loaded = false;
+				PrintInfo($">>> LilSlav.AutoDust unLoaded <<<");
+				return;
+			}
+
+			// provera da li je game pauziran
+			if (Game.IsPaused || !Utils.SleepCheck("delay")) return;
+
+			// provera da li smo ucitali player-a
+			// ili je nas player posmatrac i onda return
+			if (_player == null || _player.Team == Team.Observer) return;
+
+			// provera da li imamo dust i torbici
+			var itemDust = _myHero.FindItem("item_dust");
+			if (itemDust == null || itemDust.CanBeCasted() || _myHero.IsInvisible()) return;
+
+			// pravimo listu enemy-ja
+			// da nije iluzija
+			// da je suprotan tim od naseg heroja
+			// da je enemy ziv
+			// da je visible
+			// i da nam je u range-u
+			var listEnemy = ObjectManager.GetEntities<Hero>().Where(
+				enemy =>	!enemy.IsIllusion &&
+							enemy.Team != _player.Team &&
+							enemy.IsAlive &&
+							enemy.IsVisible &&
+							_myHero.Distance2D(enemy) <= DustRange);
+			
+			// prolazimo kroz listu za svakog heroja i proveravamo sve situacije
+			foreach (var enemy in listEnemy)
+			{
+				// dodati logiku
+			}
+
 		}
 
 		#region pomocno
 
 		public static void PrintInfo(string text, params object[] arguments)
 		{
-			PrintEncolored(text, ConsoleColor.White, arguments);
+			PrintEncolored(text, ConsoleColor.Cyan, arguments);
 		}
 
 		public static void PrintSuccess(string text, params object[] arguments)
 		{
-			PrintEncolored(text, ConsoleColor.Green, arguments);
+			PrintEncolored(text, ConsoleColor.Magenta, arguments);
 		}
 
 		public static void PrintError(string text, params object[] arguments)
