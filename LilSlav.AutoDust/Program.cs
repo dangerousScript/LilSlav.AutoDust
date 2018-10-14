@@ -15,7 +15,7 @@ namespace LilSlav.AutoDust
 		private static Hero _myHero;
 		private static Player _player;
 		private const int DustRange = 1000;					/* maksimalna udaljenost za dust */
-		private const string ScriptVersion = "1.0.0.1";		// za ispis
+		private const string ScriptVersion = "1.0.1.2";		// za ispis
 
 		#endregion
 
